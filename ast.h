@@ -13,6 +13,9 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include <map>
+
+class Function;
 
 using namespace std;
 
@@ -74,6 +77,10 @@ public:
   Expression() {}
   virtual ~Expression() {}
   virtual void print(ostream &os) const = 0;
+  virtual int run(map<string, Function *> &func, // 関数表
+                  map<string, int> &gvar,        // グローバル変数表
+                  map<string, int> &lvar         // ローカル夠数表
+  ) const = 0;
 };
 
 //---------------------------------------------------------------------
@@ -92,6 +99,11 @@ public:
   const int value() const { return value_; }
   const Type type() const { return type_; }
   void print(ostream &os) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          map<string, int> &lvar) const
+  {
+    return value_;
+  }
 };
 
 // ---------------------------------------------------------------------
@@ -108,6 +120,7 @@ public:
   ~Exp_variable() {}
   const string &name() const { return name_; }
   void print(ostream &os) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar, map<string, int> &lvar) const;
 };
 
 // ---------------------------------------------------------------------
@@ -170,6 +183,8 @@ public:
   const string &name() const { return name_; }
   const list<Expression *> &args() const { return args_; }
   void print(ostream &os) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          map<string, int> &lvar) const;
 };
 
 //--------------------------------------------------------------------
