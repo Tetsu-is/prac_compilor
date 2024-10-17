@@ -1,0 +1,5 @@
+exe/*
+a.out.dSYM/*
+.vscode/*
+.idea/*
+out.txt
