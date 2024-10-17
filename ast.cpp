@@ -123,7 +123,8 @@ void Exp_variable::print(std::ostream &os) const { os << name_; }
 //------------------------------------------------------------------------
 //   Exp_variable::run の 実装
 //------------------------------------------------------------------------
-int Exp_variable::run(map<string, Function *> &func, map<string, int> &gvar, map<string, int> &lvar) const
+int Exp_variable::run(map<string, Function *> &func, map<string, int> &gvar,
+                      map<string, int> &lvar) const
 {
   map<string, int>::const_iterator p;
   if ((p = lvar.find(name_)) != lvar.end())
@@ -159,6 +160,32 @@ void Exp_operation1::print(std::ostream &os) const
 }
 
 //------------------------------------------------------------------------
+//  Exp_operation1::run の 実装
+//------------------------------------------------------------------------
+int Exp_operation1::run(map<string, Function *> &func, map<string, int> &gvar,
+                        map<string, int> &lvar) const
+{
+  int v = operand()->run(func, gvar, lvar);
+
+  if (operand_ == NULL)
+  {
+    cerr << "operand is NULL" << endl;
+    exit(1);
+  }
+
+  switch (operation())
+  {
+  case Operator_PLUS:
+    return v;
+  case Operator_MINUS:
+    return -v;
+  default:
+    cerr << "unknown operator" << endl;
+    exit(1);
+  }
+}
+
+//------------------------------------------------------------------------
 //   Exp_operation2::print の 実装
 //------------------------------------------------------------------------
 void Exp_operation2::print(std::ostream &os) const
@@ -185,12 +212,64 @@ void Exp_operation2::print(std::ostream &os) const
 }
 
 //------------------------------------------------------------------------
+//   Exp_operation2::run の 実装
+//------------------------------------------------------------------------
+int Exp_operation2::run(map<string, Function *> &func, map<string, int> &gvar,
+                        map<string, int> &lvar) const
+{
+  if (operand1_ == NULL)
+  {
+    cerr << "operand1 is NULL" << endl;
+    exit(1);
+  }
+
+  int o1 = operand1_->run(func, gvar, lvar);
+
+  if (operand2_ == NULL)
+  {
+    cerr << "operand2 is NULL" << endl;
+    exit(1);
+  }
+
+  int o2 = operand2_->run(func, gvar, lvar);
+
+  switch (operation_)
+  {
+  case Operator_PLUS:
+    return o1 + o2;
+  case Operator_MINUS:
+    return o1 - o2;
+  case Operator_MUL:
+    return o1 * o2;
+  case Operator_DIV:
+    return o1 / o2;
+  case Operator_MOD:
+    return o1 % o2;
+  case Operator_LT:
+    return o1 < o2;
+  case Operator_GT:
+    return o1 > o2;
+  case Operator_LE:
+    return o1 <= o2;
+  case Operator_GE:
+    return o1 >= o2;
+  case Operator_NE:
+    return o1 != o2;
+  case Operator_EQ:
+    return o1 == o2;
+  default:
+    cerr << "unknown operator" << endl;
+    exit(1);
+  }
+}
+
+//------------------------------------------------------------------------
 //   Exp_function::~Exp_function() の 実装
 //------------------------------------------------------------------------
 Exp_function::~Exp_function()
 {
-  for (list<Expression *>::const_iterator it = args_.begin(); it != args_.end();
-       it++)
+  for (list<Expression *>::const_iterator it = args_.begin();
+       it != args_.end(); it++)
   {
     delete *it;
   }
@@ -202,8 +281,8 @@ Exp_function::~Exp_function()
 void Exp_function::print(ostream &os) const
 {
   os << name_ << "(";
-  for (list<Expression *>::const_iterator it = args_.begin(); it != args_.end();
-       it++)
+  for (list<Expression *>::const_iterator it = args_.begin();
+       it != args_.end(); it++)
   {
     (*it)->print(os);
     if (it != --args_.end())
@@ -217,10 +296,11 @@ void Exp_function::print(ostream &os) const
 //------------------------------------------------------------------------
 //   Exp_function::run() の 実装
 //------------------------------------------------------------------------
-int Exp_function::run(
-    map<string, Function *> &func,
-    map<string, int> &gvar,
-    map<string, int> &lvar) const { return 0; }
+int Exp_function::run(map<string, Function *> &func, map<string, int> &gvar,
+                      map<string, int> &lvar) const
+{
+  return 0;
+}
 
 //------------------------------------------------------------------------
 //   St_assign::print() の 実装

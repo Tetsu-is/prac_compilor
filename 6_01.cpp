@@ -1,8 +1,7 @@
 #include "ast.h"
 #include <iostream>
 
-int main(void)
-{
+int main(void) {
   Expression *c1 = new Exp_constant(Type_INT, 7);
   Expression *c2 = new Exp_constant(Type_CHAR, 'x');
   std::map<std::string, Function *> func;
