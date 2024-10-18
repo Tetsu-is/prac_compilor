@@ -20,4 +20,4 @@ jobs:
         run: mkdir -p exe
 
       - name: Compile and check
-        run: bash ./compile_check.sh
+        run: bash ./.github/workflows/compile.sh
