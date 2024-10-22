@@ -17,6 +17,14 @@
 
 class Function;
 
+struct Return_t
+{
+  bool val_is_returned; // return文が実行されたか
+  int return_val;       // return文の返り値
+  Return_t() : val_is_returned(false), return_val(0) {}
+  Return_t(bool r, int v) : val_is_returned(r), return_val(v) {}
+};
+
 using namespace std;
 
 //---------------------------------------------------------------------
@@ -208,6 +216,11 @@ public:
   Statement() {}                                             // Constructor
   virtual ~Statement() {}                                    // Destructor
   virtual void print(ostream &os, int indent = 0) const = 0; // Print
+  virtual Return_t run(
+      map<string, Function *> &func,
+      map<string, int> &gvar,
+      map<string, int> &lvar) const = 0;
+
 private:
   Statement(const Statement &);            // Copy constructor is forbidden
   Statement &operator=(const Statement &); // Assignment is forbidden
@@ -233,6 +246,10 @@ public:
   const Exp_variable *lhs() const { return lhs_; }
   const Expression *rhs() const { return rhs_; }
   void print(ostream &os, int indent = 0) const; // Print
+  Return_t run(
+      map<string, Function *> &func,
+      map<string, int> &gvar,
+      map<string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------

@@ -380,6 +380,33 @@ void St_assign::print(ostream &os, int indent) const
 }
 
 //------------------------------------------------------------------------
+//   St_assign::run() の 実装
+//------------------------------------------------------------------------
+Return_t St_assign::run(map<string, Function *> &func, map<string, int> &gvar, map<string, int> &lvar) const
+{
+  assert(lhs());
+  assert(rhs());
+  int i_rhs = rhs()->run(func, gvar, lvar);
+
+  map<string, int>::iterator p;
+  if ((p = lvar.find(lhs()->name())) != lvar.end())
+  {
+    p->second = i_rhs;
+  }
+  else if ((p = gvar.find(lhs()->name())) != gvar.end())
+  {
+    p->second = i_rhs;
+  }
+  else
+  {
+    cerr << "undefined variable: " << lhs()->name() << endl;
+    exit(1);
+  }
+
+  return Return_t(false, 0);
+}
+
+//------------------------------------------------------------------------
 //   St_list::print() の 実装
 //------------------------------------------------------------------------
 void St_list::print(ostream &os, int indent) const
