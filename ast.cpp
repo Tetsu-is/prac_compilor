@@ -123,8 +123,9 @@ void Exp_variable::print(std::ostream &os) const { os << name_; }
 //------------------------------------------------------------------------
 //   Exp_variable::run の 実装
 //------------------------------------------------------------------------
-int Exp_variable::run(map<string, Function *> &func, map<string, int> &gvar,
-                      map<string, int> &lvar) const
+int Exp_variable::run(
+    map<string, Function *> &func, map<string, int> &gvar,
+    map<string, int> &lvar) const
 {
   map<string, int>::const_iterator p;
   if ((p = lvar.find(name_)) != lvar.end())
@@ -161,8 +162,9 @@ void Exp_operation1::print(std::ostream &os) const
 //------------------------------------------------------------------------
 //  Exp_operation1::run の 実装
 //------------------------------------------------------------------------
-int Exp_operation1::run(map<string, Function *> &func, map<string, int> &gvar,
-                        map<string, int> &lvar) const
+int Exp_operation1::run(
+    map<string, Function *> &func, map<string, int> &gvar,
+    map<string, int> &lvar) const
 {
   int v = operand()->run(func, gvar, lvar);
 
@@ -213,8 +215,9 @@ void Exp_operation2::print(std::ostream &os) const
 //------------------------------------------------------------------------
 //   Exp_operation2::run の 実装
 //------------------------------------------------------------------------
-int Exp_operation2::run(map<string, Function *> &func, map<string, int> &gvar,
-                        map<string, int> &lvar) const
+int Exp_operation2::run(
+    map<string, Function *> &func, map<string, int> &gvar,
+    map<string, int> &lvar) const
 {
   if (operand1_ == NULL)
   {
@@ -267,8 +270,8 @@ int Exp_operation2::run(map<string, Function *> &func, map<string, int> &gvar,
 //------------------------------------------------------------------------
 Exp_function::~Exp_function()
 {
-  for (list<Expression *>::const_iterator it = args_.begin();
-       it != args_.end(); it++)
+  for (list<Expression *>::const_iterator it = args_.begin(); it != args_.end();
+       it++)
   {
     delete *it;
   }
@@ -280,8 +283,8 @@ Exp_function::~Exp_function()
 void Exp_function::print(ostream &os) const
 {
   os << name_ << "(";
-  for (list<Expression *>::const_iterator it = args_.begin();
-       it != args_.end(); it++)
+  for (list<Expression *>::const_iterator it = args_.begin(); it != args_.end();
+       it++)
   {
     (*it)->print(os);
     if (it != --args_.end())
@@ -295,10 +298,58 @@ void Exp_function::print(ostream &os) const
 //------------------------------------------------------------------------
 //   Exp_function::run() の 実装
 //------------------------------------------------------------------------
-int Exp_function::run(map<string, Function *> &func, map<string, int> &gvar,
-                      map<string, int> &lvar) const
+int Exp_function::run(
+    map<string, Function *> &func, map<string, int> &gvar,
+    map<string, int> &lvar) const
 {
-  return 0;
+  // push each arg value to i_args
+  list<int> i_args;
+  for (list<Expression *>::const_iterator it = args_.begin();
+       it != args_.end(); it++)
+  {
+    int val = (*it)->run(func, gvar, lvar);
+    i_args.push_back(val);
+  }
+
+  map<string, Function *>::const_iterator p;
+
+  if (name_ == "getint")
+  {
+    int i;
+    cin >> i;
+    return i;
+  }
+  else if (name_ == "getchar")
+  {
+    char c;
+    cin >> c;
+    return c;
+  }
+  else if (name_ == "putint")
+  {
+    int i = i_args.front();
+    cout << i;
+    return 0;
+  }
+  else if (name_ == "putchar")
+  {
+    char c = i_args.front();
+    cout << c;
+    return 0;
+  }
+  else
+  {
+    if ((p = func.find(name_)) != func.end())
+    {
+      Function *f = p->second;
+      return f->run(func, gvar, i_args);
+    }
+    else
+    {
+      cerr << "undefined function: " << name_ << endl;
+      exit(1);
+    }
+  }
 }
 
 //------------------------------------------------------------------------
@@ -467,6 +518,12 @@ void Function::print(ostream &os) const
   body_->print(os, 1);
 
   os << "}" << endl;
+}
+
+int Function::run(map<string, Function *> &func, map<string, int> &gvar,
+                  list<int> &i_args) const
+{
+  return i_args.front(); // 仮の実装
 }
 
 //------------------------------------------------------------------------
