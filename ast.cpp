@@ -147,7 +147,7 @@ int Exp_variable::run(map<string, Function *> &func, map<string, int> &gvar,
 //------------------------------------------------------------------------
 void Exp_operation1::print(std::ostream &os) const
 {
-  os << "(" << Operator_string(operation());
+  os << Operator_string(operation());
   if (operand())
   {
     operand()->print(os);
@@ -156,7 +156,6 @@ void Exp_operation1::print(std::ostream &os) const
   {
     os << "UNDEF";
   }
-  os << ")";
 }
 
 //------------------------------------------------------------------------
@@ -480,6 +479,7 @@ void Program::print(ostream &os) const
        it != varlist_.end(); it++)
   {
     (*it)->print(os);
+    os << ";" << endl;
   }
 
   os << endl;
