@@ -1,8 +1,7 @@
 #include "ast.h"
 #include <iostream>
 
-int main(void)
-{
+int main(void) {
   Exp_variable *v1 = new Exp_variable("i");
   Expression *c1 = new Exp_constant(Type_INT, 0);
   Statement *s1 = new St_assign(v1, c1);

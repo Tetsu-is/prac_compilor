@@ -17,8 +17,7 @@
 
 class Function;
 
-struct Return_t
-{
+struct Return_t {
   bool val_is_returned; // return文が実行されたか
   int return_val;       // return文の返り値
   Return_t() : val_is_returned(false), return_val(0) {}
@@ -31,11 +30,7 @@ using namespace std;
 //   Type
 //   型 (int か char) を表す列挙型
 //---------------------------------------------------------------------
-enum Type
-{
-  Type_INT,
-  Type_CHAR
-};
+enum Type { Type_INT, Type_CHAR };
 
 //---------------------------------------------------------------------
 // Type_string
@@ -47,8 +42,7 @@ string Type_string(Type t);
 //  Operator
 //  演算子を表す列挙型
 //---------------------------------------------------------------------
-enum Operator
-{
+enum Operator {
   Operator_PLUS,  // +
   Operator_MINUS, // -
   Operator_MUL,   // *
@@ -75,8 +69,7 @@ string Operator_string(Operator o);
 //  class Expression
 //  「式」の抽象基底
 //---------------------------------------------------------------------
-class Expression
-{
+class Expression {
 private:
   Expression(const Expression &);
   Expression &operator=(const Expression &);
@@ -85,10 +78,9 @@ public:
   Expression() {}
   virtual ~Expression() {}
   virtual void print(ostream &os) const = 0;
-  virtual int
-  run(map<string, Function *> &func, // 関数表
-      map<string, int> &gvar,        // グローバル変数表
-      map<string, int> &lvar         // ローカル夠数表
+  virtual int run(map<string, Function *> &func, // 関数表
+                  map<string, int> &gvar,        // グローバル変数表
+                  map<string, int> &lvar         // ローカル夠数表
   ) const = 0;
 };
 
@@ -96,8 +88,7 @@ public:
 //  class Exp_constant
 //  式中の定数を表す
 //---------------------------------------------------------------------
-class Exp_constant : public Expression
-{
+class Exp_constant : public Expression {
 private:
   Type type_;
   int value_;
@@ -108,10 +99,8 @@ public:
   const int value() const { return value_; }
   const Type type() const { return type_; }
   void print(ostream &os) const;
-  int run(
-      map<string, Function *> &func, map<string, int> &gvar,
-      map<string, int> &lvar) const
-  {
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          map<string, int> &lvar) const {
     return value_;
   }
 };
@@ -120,8 +109,7 @@ public:
 // class Exp_variable
 // 式中の変数を表す
 // --------------------------------------------------------------------
-class Exp_variable : public Expression
-{
+class Exp_variable : public Expression {
 private:
   string name_;
 
@@ -130,17 +118,15 @@ public:
   ~Exp_variable() {}
   const string &name() const { return name_; }
   void print(ostream &os) const;
-  int run(
-      map<string, Function *> &func, map<string, int> &gvar,
-      map<string, int> &lvar) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          map<string, int> &lvar) const;
 };
 
 // ---------------------------------------------------------------------
 // class Exp_operation1
 // オペランドを1つだけ取る演算
 // --------------------------------------------------------------------
-class Exp_operation1 : public Expression
-{
+class Exp_operation1 : public Expression {
 private:
   Operator operation_;
   Expression *operand_;
@@ -151,17 +137,15 @@ public:
   Operator operation() const { return operation_; }
   const Expression *operand() const { return operand_; }
   void print(ostream &os) const;
-  int run(
-      map<string, Function *> &func, map<string, int> &gvar,
-      map<string, int> &lvar) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          map<string, int> &lvar) const;
 };
 
 // ---------------------------------------------------------------------
 // class Exp_operation1
 // オペランドを2つだけ取る演算
 // --------------------------------------------------------------------
-class Exp_operation2 : public Expression
-{
+class Exp_operation2 : public Expression {
 private:
   Operator operation_;
   Expression *operand1_;
@@ -170,8 +154,7 @@ private:
 public:
   Exp_operation2(Operator op, Expression *ex1, Expression *ex2)
       : operation_(op), operand1_(ex1), operand2_(ex2) {}
-  ~Exp_operation2()
-  {
+  ~Exp_operation2() {
     delete operand1_;
     delete operand2_;
   }
@@ -179,17 +162,15 @@ public:
   const Expression *operand1() const { return operand1_; }
   const Expression *operand2() const { return operand2_; }
   void print(ostream &os) const;
-  int run(
-      map<string, Function *> &func, map<string, int> &gvar,
-      map<string, int> &lvar) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          map<string, int> &lvar) const;
 };
 
 // ---------------------------------------------------------------------
 // class Exp_function
 // 関数式を表す
 // --------------------------------------------------------------------
-class Exp_function : public Expression
-{
+class Exp_function : public Expression {
 private:
   string name_;
   list<Expression *> args_;
@@ -201,25 +182,21 @@ public:
   const string &name() const { return name_; }
   const list<Expression *> &args() const { return args_; }
   void print(ostream &os) const;
-  int run(
-      map<string, Function *> &func, map<string, int> &gvar,
-      map<string, int> &lvar) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          map<string, int> &lvar) const;
 };
 
 //--------------------------------------------------------------------
 //  class Statement
 // 「文」の抽象基底
 //---------------------------------------------------------------------
-class Statement
-{
+class Statement {
 public:
   Statement() {}                                             // Constructor
   virtual ~Statement() {}                                    // Destructor
   virtual void print(ostream &os, int indent = 0) const = 0; // Print
-  virtual Return_t run(
-      map<string, Function *> &func,
-      map<string, int> &gvar,
-      map<string, int> &lvar) const = 0;
+  virtual Return_t run(map<string, Function *> &func, map<string, int> &gvar,
+                       map<string, int> &lvar) const = 0;
 
 private:
   Statement(const Statement &);            // Copy constructor is forbidden
@@ -230,44 +207,37 @@ private:
 //  class St_assign
 //  代入文の抽象基底
 //---------------------------------------------------------------------
-class St_assign : public Statement
-{
+class St_assign : public Statement {
 private:
   Exp_variable *lhs_; // left-hand side
   Expression *rhs_;   // right-hand side
 public:
   St_assign(Exp_variable *lexp, Expression *rexp)
       : lhs_(lexp), rhs_(rexp) {} // Constructor
-  ~St_assign()
-  {
+  ~St_assign() {
     delete lhs_;
     delete rhs_;
   } // Destructor deltete child nodes
   const Exp_variable *lhs() const { return lhs_; }
   const Expression *rhs() const { return rhs_; }
   void print(ostream &os, int indent = 0) const; // Print
-  Return_t run(
-      map<string, Function *> &func,
-      map<string, int> &gvar,
-      map<string, int> &lvar) const;
+  Return_t run(map<string, Function *> &func, map<string, int> &gvar,
+               map<string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------
 //  class St_list
 //  分の並びの抽象基底
 //---------------------------------------------------------------------
-class St_list : public Statement
-{
+class St_list : public Statement {
 private:
   list<Statement *> statements_;
 
 public:
   St_list(const list<Statement *> &li) : statements_(li) {}
-  ~St_list()
-  {
+  ~St_list() {
     for (list<Statement *>::const_iterator it = statements_.begin();
-         it != statements_.end(); it++)
-    {
+         it != statements_.end(); it++) {
       delete *it;
     }
   }
@@ -279,8 +249,7 @@ public:
 //  class St_if
 //  if文の抽象基底
 //---------------------------------------------------------------------
-class St_if : public Statement
-{
+class St_if : public Statement {
 private:
   Expression *cond_;
   Statement *then_;
@@ -289,8 +258,7 @@ private:
 public:
   St_if(Expression *cond, Statement *then, Statement *els)
       : cond_(cond), then_(then), else_(els) {}
-  ~St_if()
-  {
+  ~St_if() {
     delete cond_;
     delete then_;
     delete else_;
@@ -307,16 +275,14 @@ Statement *make_if(void);
 //  class St_while
 //  while文の抽象基底
 //---------------------------------------------------------------------
-class St_while : public Statement
-{
+class St_while : public Statement {
 private:
   Expression *cond_;
   Statement *body_;
 
 public:
   St_while(Expression *cond, Statement *body) : cond_(cond), body_(body) {}
-  ~St_while()
-  {
+  ~St_while() {
     delete cond_;
     delete body_;
   }
@@ -331,8 +297,7 @@ Statement *make_while(void);
 //  class St_return
 //  return文の抽象基底
 //---------------------------------------------------------------------
-class St_return : public Statement
-{
+class St_return : public Statement {
 private:
   Expression *value_;
 
@@ -346,8 +311,7 @@ public:
 //---------------------------------------------------------------------
 //  class St_function
 //---------------------------------------------------------------------
-class St_function : public Statement
-{
+class St_function : public Statement {
 private:
   Exp_function function_; // Exp_function を包含
 public:
@@ -363,8 +327,7 @@ public:
 //---------------------------------------------------------------------
 // class Variable
 //--------------------------------------------------------------------
-class Variable
-{
+class Variable {
 private:
   Type type_;
   string name_;
@@ -380,8 +343,7 @@ public:
 //---------------------------------------------------------------------
 // class Function
 //--------------------------------------------------------------------
-class Function
-{
+class Function {
 private:
   Type type_;
   string name_;
@@ -390,9 +352,8 @@ private:
   Statement *body_;
 
 public:
-  Function(
-      Type type, const string &name, const list<Variable *> &args,
-      const list<Variable *> &lvarlist, Statement *body)
+  Function(Type type, const string &name, const list<Variable *> &args,
+           const list<Variable *> &lvarlist, Statement *body)
       : type_(type), name_(name), args_(args), lvarlist_(lvarlist),
         body_(body) {}
   ~Function();
@@ -402,25 +363,22 @@ public:
   const list<Variable *> &lvarlist() const { return lvarlist_; }
   const Statement *body() const { return body_; }
   void print(ostream &os) const;
-  int run(
-      map<string, Function *> &func, map<string, int> &gvar,
-      list<int> &i_args) const;
+  int run(map<string, Function *> &func, map<string, int> &gvar,
+          list<int> &i_args) const;
 };
 
 //---------------------------------------------------------------------
 // class Program
 //--------------------------------------------------------------------
-class Program
-{
+class Program {
 private:
   list<Variable *> varlist_;
   list<Function *> funclist_;
   Function *main_;
 
 public:
-  Program(
-      const list<Variable *> &varlist, const list<Function *> &funclist,
-      Function *main)
+  Program(const list<Variable *> &varlist, const list<Function *> &funclist,
+          Function *main)
       : varlist_(varlist), funclist_(funclist), main_(main) {}
   ~Program();
   const list<Variable *> &varlist() const { return varlist_; }
