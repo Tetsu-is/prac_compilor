@@ -17,7 +17,8 @@
 
 class Function;
 
-struct Return_t {
+struct Return_t
+{
   bool val_is_returned; // return文が実行されたか
   int return_val;       // return文の返り値
   Return_t() : val_is_returned(false), return_val(0) {}
@@ -30,7 +31,11 @@ using namespace std;
 //   Type
 //   型 (int か char) を表す列挙型
 //---------------------------------------------------------------------
-enum Type { Type_INT, Type_CHAR };
+enum Type
+{
+  Type_INT,
+  Type_CHAR
+};
 
 //---------------------------------------------------------------------
 // Type_string
@@ -42,7 +47,8 @@ string Type_string(Type t);
 //  Operator
 //  演算子を表す列挙型
 //---------------------------------------------------------------------
-enum Operator {
+enum Operator
+{
   Operator_PLUS,  // +
   Operator_MINUS, // -
   Operator_MUL,   // *
@@ -69,7 +75,8 @@ string Operator_string(Operator o);
 //  class Expression
 //  「式」の抽象基底
 //---------------------------------------------------------------------
-class Expression {
+class Expression
+{
 private:
   Expression(const Expression &);
   Expression &operator=(const Expression &);
@@ -88,7 +95,8 @@ public:
 //  class Exp_constant
 //  式中の定数を表す
 //---------------------------------------------------------------------
-class Exp_constant : public Expression {
+class Exp_constant : public Expression
+{
 private:
   Type type_;
   int value_;
@@ -100,7 +108,8 @@ public:
   const Type type() const { return type_; }
   void print(ostream &os) const;
   int run(map<string, Function *> &func, map<string, int> &gvar,
-          map<string, int> &lvar) const {
+          map<string, int> &lvar) const
+  {
     return value_;
   }
 };
@@ -109,7 +118,8 @@ public:
 // class Exp_variable
 // 式中の変数を表す
 // --------------------------------------------------------------------
-class Exp_variable : public Expression {
+class Exp_variable : public Expression
+{
 private:
   string name_;
 
@@ -126,7 +136,8 @@ public:
 // class Exp_operation1
 // オペランドを1つだけ取る演算
 // --------------------------------------------------------------------
-class Exp_operation1 : public Expression {
+class Exp_operation1 : public Expression
+{
 private:
   Operator operation_;
   Expression *operand_;
@@ -145,7 +156,8 @@ public:
 // class Exp_operation1
 // オペランドを2つだけ取る演算
 // --------------------------------------------------------------------
-class Exp_operation2 : public Expression {
+class Exp_operation2 : public Expression
+{
 private:
   Operator operation_;
   Expression *operand1_;
@@ -154,7 +166,8 @@ private:
 public:
   Exp_operation2(Operator op, Expression *ex1, Expression *ex2)
       : operation_(op), operand1_(ex1), operand2_(ex2) {}
-  ~Exp_operation2() {
+  ~Exp_operation2()
+  {
     delete operand1_;
     delete operand2_;
   }
@@ -170,7 +183,8 @@ public:
 // class Exp_function
 // 関数式を表す
 // --------------------------------------------------------------------
-class Exp_function : public Expression {
+class Exp_function : public Expression
+{
 private:
   string name_;
   list<Expression *> args_;
@@ -190,7 +204,8 @@ public:
 //  class Statement
 // 「文」の抽象基底
 //---------------------------------------------------------------------
-class Statement {
+class Statement
+{
 public:
   Statement() {}                                             // Constructor
   virtual ~Statement() {}                                    // Destructor
@@ -207,14 +222,16 @@ private:
 //  class St_assign
 //  代入文の抽象基底
 //---------------------------------------------------------------------
-class St_assign : public Statement {
+class St_assign : public Statement
+{
 private:
   Exp_variable *lhs_; // left-hand side
   Expression *rhs_;   // right-hand side
 public:
   St_assign(Exp_variable *lexp, Expression *rexp)
       : lhs_(lexp), rhs_(rexp) {} // Constructor
-  ~St_assign() {
+  ~St_assign()
+  {
     delete lhs_;
     delete rhs_;
   } // Destructor deltete child nodes
@@ -229,27 +246,33 @@ public:
 //  class St_list
 //  分の並びの抽象基底
 //---------------------------------------------------------------------
-class St_list : public Statement {
+class St_list : public Statement
+{
 private:
   list<Statement *> statements_;
 
 public:
   St_list(const list<Statement *> &li) : statements_(li) {}
-  ~St_list() {
+  ~St_list()
+  {
     for (list<Statement *>::const_iterator it = statements_.begin();
-         it != statements_.end(); it++) {
+         it != statements_.end(); it++)
+    {
       delete *it;
     }
   }
   const list<Statement *> &statements() const { return statements_; }
   void print(ostream &os, int indent = 0) const;
+  Return_t run(map<string, Function *> &func, map<string, int> &gvar,
+               map<string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------
 //  class St_if
 //  if文の抽象基底
 //---------------------------------------------------------------------
-class St_if : public Statement {
+class St_if : public Statement
+{
 private:
   Expression *cond_;
   Statement *then_;
@@ -258,7 +281,8 @@ private:
 public:
   St_if(Expression *cond, Statement *then, Statement *els)
       : cond_(cond), then_(then), else_(els) {}
-  ~St_if() {
+  ~St_if()
+  {
     delete cond_;
     delete then_;
     delete else_;
@@ -267,6 +291,8 @@ public:
   const Statement *then_part() const { return then_; }
   const Statement *else_part() const { return else_; }
   void print(ostream &os, int indent = 0) const;
+  Return_t run(map<string, Function *> &func, map<string, int> &gvar,
+               map<string, int> &lvar) const;
 };
 
 Statement *make_if(void);
@@ -275,20 +301,24 @@ Statement *make_if(void);
 //  class St_while
 //  while文の抽象基底
 //---------------------------------------------------------------------
-class St_while : public Statement {
+class St_while : public Statement
+{
 private:
   Expression *cond_;
   Statement *body_;
 
 public:
   St_while(Expression *cond, Statement *body) : cond_(cond), body_(body) {}
-  ~St_while() {
+  ~St_while()
+  {
     delete cond_;
     delete body_;
   }
   const Expression *condition() const { return cond_; }
   const Statement *body() const { return body_; }
   void print(ostream &os, int indent = 0) const;
+  Return_t run(map<string, Function *> &func, map<string, int> &gvar,
+               map<string, int> &lvar) const;
 };
 
 Statement *make_while(void);
@@ -297,7 +327,8 @@ Statement *make_while(void);
 //  class St_return
 //  return文の抽象基底
 //---------------------------------------------------------------------
-class St_return : public Statement {
+class St_return : public Statement
+{
 private:
   Expression *value_;
 
@@ -306,12 +337,15 @@ public:
   ~St_return() { delete value_; }
   const Expression *value() const { return value_; }
   void print(ostream &os, int indent = 0) const;
+  Return_t run(map<string, Function *> &func, map<string, int> &gvar,
+               map<string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------
 //  class St_function
 //---------------------------------------------------------------------
-class St_function : public Statement {
+class St_function : public Statement
+{
 private:
   Exp_function function_; // Exp_function を包含
 public:
@@ -322,12 +356,15 @@ public:
   const string &name() const { return function_.name(); }
   const list<Expression *> &args() const { return function_.args(); }
   void print(ostream &os, int indent = 0) const;
+  Return_t run(map<string, Function *> &func, map<string, int> &gvar,
+               map<string, int> &lvar) const;
 };
 
 //---------------------------------------------------------------------
 // class Variable
 //--------------------------------------------------------------------
-class Variable {
+class Variable
+{
 private:
   Type type_;
   string name_;
@@ -343,7 +380,8 @@ public:
 //---------------------------------------------------------------------
 // class Function
 //--------------------------------------------------------------------
-class Function {
+class Function
+{
 private:
   Type type_;
   string name_;
@@ -370,7 +408,8 @@ public:
 //---------------------------------------------------------------------
 // class Program
 //--------------------------------------------------------------------
-class Program {
+class Program
+{
 private:
   list<Variable *> varlist_;
   list<Function *> funclist_;
