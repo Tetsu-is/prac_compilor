@@ -584,6 +584,8 @@ void St_function::print(ostream &os, int indent) const
 Return_t St_function::run(map<string, Function *> &func, map<string, int> &gvar,
                           map<string, int> &lvar) const
 {
+  function_.run(func, gvar, lvar);
+  return Return_t(false, 0);
 }
 
 //------------------------------------------------------------------------
@@ -630,10 +632,32 @@ void Function::print(ostream &os) const
   os << "}" << endl;
 }
 
+//------------------------------------------------------------------------
+//   Function::runの実装
+//------------------------------------------------------------------------
 int Function::run(map<string, Function *> &func, map<string, int> &gvar,
                   list<int> &i_args) const
 {
-  return i_args.front(); // 仮の実装
+  // 引数の名前と値をローカル変数表に登録する
+  map<string, int> lvar;
+
+  auto i = args().begin();
+  auto j = i_args.begin();
+  
+  for (;i != args().end() && j != i_args.end(); ++i, ++j)
+  {
+    lvar[(*i)->name()] = *j;
+  }
+
+  // ローカル変数をローカル変数表に登録
+  for (list<Variable *>::const_iterator it = lvarlist().begin(); it != lvarlist().end(); it++)
+  {
+    lvar[(*it)->name()] = 0;
+  }
+
+  Return_t rd = body()->run(func, gvar, lvar);
+
+  return rd.return_val;
 }
 
 //------------------------------------------------------------------------
@@ -663,4 +687,17 @@ void Program::print(ostream &os) const
 
   // print main function
   main_->print(os);
+}
+
+//------------------------------------------------------------------------
+//  Program::run() の 実装
+//------------------------------------------------------------------------
+int Program::run(map<string, Function *> &func, map<string, int> &gvar, list<int> &i_args) const
+{
+  list<Variable *> gvar;
+
+  for(auto i = varlist()->begin(); i != varlist()->end(); i++)
+  {
+    gvar[(*i)->name()] =  
+  }
 }
