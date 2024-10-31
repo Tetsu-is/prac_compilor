@@ -28,6 +28,19 @@ Statement *make_if()
 int main(void)
 {
   Statement *s = make_if();
-  s->print(std::cout, 0);
+  map<string, Function *> func;
+  map<string, int> gvar;
+  map<string, int> lvar;
+  // 真の場合
+  lvar["i"] = -5;
+  lvar["s"] = 10;
+  Return_t rd1 = s->run(func, gvar, lvar);
+  cout << "s = " << lvar["s"] << endl;
+
+  // 偽の場合
+  lvar["i"] = 7;
+  lvar["s"] = 10;
+  Return_t rd2 = s->run(func, gvar, lvar);
+  cout << "s = " << lvar["s"] << endl;
   return 0;
 }

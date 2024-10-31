@@ -421,6 +421,13 @@ void St_list::print(ostream &os, int indent) const
 Return_t St_list::run(map<string, Function *> &func, map<string, int> &gvar,
                       map<string, int> &lvar) const
 {
+  for (list<Statement *>::const_iterator it = statements_.begin(); it != statements_.end(); it++)
+  {
+    assert(*it);
+    Return_t rd = (*it)->run(func, gvar, lvar);
+    if (rd.val_is_returned)
+      return rd;
+  }
   return Return_t(false, 0);
 }
 
@@ -462,6 +469,26 @@ void St_if::print(ostream &os, int indent) const
 Return_t St_if::run(map<string, Function *> &func, map<string, int> &gvar,
                     map<string, int> &lvar) const
 {
+  assert(condition() != NULL);
+
+  int is_condition_true = condition()->run(func, gvar, lvar);
+
+  if (is_condition_true != 0)
+  {
+    if (then_part() == NULL)
+    {
+      return Return_t(false, 0);
+    }
+    return then_part()->run(func, gvar, lvar);
+  }
+  else
+  {
+    if (else_part() == NULL)
+    {
+      return Return_t(false, 0);
+    }
+    return else_part()->run(func, gvar, lvar);
+  }
   return Return_t(false, 0);
 }
 
@@ -497,6 +524,19 @@ void St_while::print(ostream &os, int indent) const
 Return_t St_while::run(map<string, Function *> &func, map<string, int> &gvar,
                        map<string, int> &lvar) const
 {
+
+  assert(condition() != NULL);
+
+  while (condition()->run(func, gvar, lvar) != 0)
+  {
+    if (body() == NULL)
+    {
+      return Return_t(false, 0);
+    }
+    Return_t rd = body()->run(func, gvar, lvar);
+    if (rd.val_is_returned)
+      return rd;
+  }
   return Return_t(false, 0);
 }
 
@@ -523,7 +563,9 @@ void St_return::print(ostream &os, int indent) const
 Return_t St_return::run(map<string, Function *> &func, map<string, int> &gvar,
                         map<string, int> &lvar) const
 {
-  return Return_t(false, 0);
+  assert(value());
+  int rv = value()->run(func, gvar, lvar);
+  return Return_t(true, rv);
 }
 
 //------------------------------------------------------------------------
@@ -542,7 +584,6 @@ void St_function::print(ostream &os, int indent) const
 Return_t St_function::run(map<string, Function *> &func, map<string, int> &gvar,
                           map<string, int> &lvar) const
 {
-  return Return_t(false, 0);
 }
 
 //------------------------------------------------------------------------
