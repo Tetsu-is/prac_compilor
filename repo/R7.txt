@@ -1,0 +1,416 @@
+##コンパイラ実習 37022497 石本哲郎
+##日付 11/11
+
+# 課題 7.1
+
+##課題内容
+空白の処理
+
+##結果
+4: type = KW_INT     token = "int"
+  4: type = KW_CHAR    token = "char"
+4: 不正な文字 'e'
+
+##感想
+空白を読み飛ばすことで、最初のトークンから解析できるようになることがわかった。
+
+# 課題 7.2
+
+##課題内容
+キーワードの定義¡™¡
+
+##結果
+  4: type = KW_INT     token = "int"
+  4: type = KW_CHAR    token = "char"
+  4: type = KW_ELSE    token = "else"
+  4: type = KW_IF      token = "if"
+  4: type = KW_RETURN  token = "return"
+  4: type = KW_WHILE   token = "while"
+5: 不正な文字 ';'
+
+##感想
+トークン、対応するマクロ変数名の形で定義することでトークンの対応を定義できることがわかった。
+
+# 課題 7.3
+
+##課題内容
+区切り記号・演算子の定義
+
+##結果
+  4: type = KW_INT     token = "int"
+  4: type = KW_CHAR    token = "char"
+  4: type = KW_ELSE    token = "else"
+  4: type = KW_IF      token = "if"
+  4: type = KW_RETURN  token = "return"
+  4: type = KW_WHILE   token = "while"
+  5: type = SEMICOLON  token = ";"
+  5: type = COMMA      token = ","
+  5: type = LPAR       token = "("
+  5: type = RPAR       token = ")"
+  5: type = LBRACE     token = "{"
+  5: type = RBRACE     token = "}"
+  5: type = LBRACK     token = "["
+  5: type = RBRACK     token = "]"
+  6: type = MINUS      token = "-"
+  6: type = PLUS       token = "+"
+  6: type = STAR       token = "*"
+  6: type = SLASH      token = "/"
+  6: type = PERCENT    token = "%"
+  6: type = AND        token = "&"
+  6: type = EQ         token = "="
+  6: type = EQEQ       token = "=="
+  6: type = NE         token = "!="
+  6: type = GT         token = ">"
+  6: type = GE         token = ">="
+  6: type = LT         token = "<"
+  6: type = LE         token = "<="
+7: 不正な文字 '1'
+
+##感想
+それぞれ対応付けするだけだったので、簡単に定義できた。
+
+# 課題 7.4
+
+##課題内容
+整数定義
+
+##結果
+  4: type = KW_INT     token = "int"
+  4: type = KW_CHAR    token = "char"
+  4: type = KW_ELSE    token = "else"
+  4: type = KW_IF      token = "if"
+  4: type = KW_RETURN  token = "return"
+  4: type = KW_WHILE   token = "while"
+  5: type = SEMICOLON  token = ";"
+  5: type = COMMA      token = ","
+  5: type = LPAR       token = "("
+  5: type = RPAR       token = ")"
+  5: type = LBRACE     token = "{"
+  5: type = RBRACE     token = "}"
+  5: type = LBRACK     token = "["
+  5: type = RBRACK     token = "]"
+  6: type = MINUS      token = "-"
+  6: type = PLUS       token = "+"
+  6: type = STAR       token = "*"
+  6: type = SLASH      token = "/"
+  6: type = PERCENT    token = "%"
+  6: type = AND        token = "&"
+  6: type = EQ         token = "="
+  6: type = EQEQ       token = "=="
+  6: type = NE         token = "!="
+  6: type = GT         token = ">"
+  6: type = GE         token = ">="
+  6: type = LT         token = "<"
+  6: type = LE         token = "<="
+  7: type = INT        token = "1"  val = 1
+  7: type = INT        token = "2"  val = 2
+  7: type = INT        token = "12"  val = 12
+  7: type = INT        token = "123"  val = 123
+  7: type = INT        token = "0123456"  val = 123456
+  7: type = INT        token = "00123456789"  val = 123456789
+8: 不正な文字 'a'
+
+##感想
+トークンを完全一致でなく、正規表現で定義しておいてくことがわかった。
+
+# 課題 7.5
+
+##課題内容
+識別子
+
+##結果
+  4: type = KW_INT     token = "int"
+  4: type = KW_CHAR    token = "char"
+  4: type = KW_ELSE    token = "else"
+  4: type = KW_IF      token = "if"
+  4: type = KW_RETURN  token = "return"
+  4: type = KW_WHILE   token = "while"
+  5: type = SEMICOLON  token = ";"
+  5: type = COMMA      token = ","
+  5: type = LPAR       token = "("
+  5: type = RPAR       token = ")"
+  5: type = LBRACE     token = "{"
+  5: type = RBRACE     token = "}"
+  5: type = LBRACK     token = "["
+  5: type = RBRACK     token = "]"
+  6: type = MINUS      token = "-"
+  6: type = PLUS       token = "+"
+  6: type = STAR       token = "*"
+  6: type = SLASH      token = "/"
+  6: type = PERCENT    token = "%"
+  6: type = AND        token = "&"
+  6: type = EQ         token = "="
+  6: type = EQEQ       token = "=="
+  6: type = NE         token = "!="
+  6: type = GT         token = ">"
+  6: type = GE         token = ">="
+  6: type = LT         token = "<"
+  6: type = LE         token = "<="
+  7: type = INT        token = "1"  val = 1
+  7: type = INT        token = "2"  val = 2
+  7: type = INT        token = "12"  val = 12
+  7: type = INT        token = "123"  val = 123
+  7: type = INT        token = "0123456"  val = 123456
+  7: type = INT        token = "00123456789"  val = 123456789
+  8: type = ID         token = "a"
+  8: type = ID         token = "b"
+  8: type = ID         token = "c"
+  8: type = ID         token = "abc"
+  8: type = ID         token = "ABC"
+  8: type = ID         token = "main"
+  8: type = ID         token = "x123"
+  8: type = ID         token = "p000Ax3"
+  9: type = ID         token = "_program"
+  9: type = ID         token = "u_p0x_A0x_774"
+10: 不正な文字 '''
+
+##感想
+文字アンダースコアか文字アンダースコア数字の形で識別子を定義することがわかった。
+
+# 課題 7.6
+
+##課題内容
+文字定数
+
+##結果
+  4: type = KW_INT     token = "int"
+  4: type = KW_CHAR    token = "char"
+  4: type = KW_ELSE    token = "else"
+  4: type = KW_IF      token = "if"
+  4: type = KW_RETURN  token = "return"
+  4: type = KW_WHILE   token = "while"
+  5: type = SEMICOLON  token = ";"
+  5: type = COMMA      token = ","
+  5: type = LPAR       token = "("
+  5: type = RPAR       token = ")"
+  5: type = LBRACE     token = "{"
+  5: type = RBRACE     token = "}"
+  5: type = LBRACK     token = "["
+  5: type = RBRACK     token = "]"
+  6: type = MINUS      token = "-"
+  6: type = PLUS       token = "+"
+  6: type = STAR       token = "*"
+  6: type = SLASH      token = "/"
+  6: type = PERCENT    token = "%"
+  6: type = AND        token = "&"
+  6: type = EQ         token = "="
+  6: type = EQEQ       token = "=="
+  6: type = NE         token = "!="
+  6: type = GT         token = ">"
+  6: type = GE         token = ">="
+  6: type = LT         token = "<"
+  6: type = LE         token = "<="
+  7: type = INT        token = "1"  val = 1
+  7: type = INT        token = "2"  val = 2
+  7: type = INT        token = "12"  val = 12
+  7: type = INT        token = "123"  val = 123
+  7: type = INT        token = "0123456"  val = 123456
+  7: type = INT        token = "00123456789"  val = 123456789
+  8: type = ID         token = "a"
+  8: type = ID         token = "b"
+  8: type = ID         token = "c"
+  8: type = ID         token = "abc"
+  8: type = ID         token = "ABC"
+  8: type = ID         token = "main"
+  8: type = ID         token = "x123"
+  8: type = ID         token = "p000Ax3"
+  9: type = ID         token = "_program"
+  9: type = ID         token = "u_p0x_A0x_774"
+ 10: type = CHAR       token = "'a'"  val = 97
+ 10: type = CHAR       token = "'b'"  val = 98
+ 10: type = CHAR       token = "'0'"  val = 48
+10: 不正な文字 '''
+
+##感想
+正規表現で.を使うことで、任意の文字を表現できることがわかった。
+
+# 課題 7.7
+
+##課題内容
+エスケープ記号を含む文字定数
+
+##結果
+./testlex test_lex.txt
+  4: type = KW_INT     token = "int"
+  4: type = KW_CHAR    token = "char"
+  4: type = KW_ELSE    token = "else"
+  4: type = KW_IF      token = "if"
+  4: type = KW_RETURN  token = "return"
+  4: type = KW_WHILE   token = "while"
+  5: type = SEMICOLON  token = ";"
+  5: type = COMMA      token = ","
+  5: type = LPAR       token = "("
+  5: type = RPAR       token = ")"
+  5: type = LBRACE     token = "{"
+  5: type = RBRACE     token = "}"
+  5: type = LBRACK     token = "["
+  5: type = RBRACK     token = "]"
+  6: type = MINUS      token = "-"
+  6: type = PLUS       token = "+"
+  6: type = STAR       token = "*"
+  6: type = SLASH      token = "/"
+  6: type = PERCENT    token = "%"
+  6: type = AND        token = "&"
+  6: type = EQ         token = "="
+  6: type = EQEQ       token = "=="
+  6: type = NE         token = "!="
+  6: type = GT         token = ">"
+  6: type = GE         token = ">="
+  6: type = LT         token = "<"
+  6: type = LE         token = "<="
+  7: type = INT        token = "1"  val = 1
+  7: type = INT        token = "2"  val = 2
+  7: type = INT        token = "12"  val = 12
+  7: type = INT        token = "123"  val = 123
+  7: type = INT        token = "0123456"  val = 123456
+  7: type = INT        token = "00123456789"  val = 123456789
+  8: type = ID         token = "a"
+  8: type = ID         token = "b"
+  8: type = ID         token = "c"
+  8: type = ID         token = "abc"
+  8: type = ID         token = "ABC"
+  8: type = ID         token = "main"
+  8: type = ID         token = "x123"
+  8: type = ID         token = "p000Ax3"
+  9: type = ID         token = "_program"
+  9: type = ID         token = "u_p0x_A0x_774"
+ 10: type = CHAR       token = "'a'"  val = 97
+ 10: type = CHAR       token = "'b'"  val = 98
+ 10: type = CHAR       token = "'0'"  val = 48
+ 10: type = CHAR       token = "'\t'"  val = 9
+ 10: type = CHAR       token = "'\n'"  val = 10
+ 10: type = CHAR       token = "'\''"  val = 39
+ 10: type = CHAR       token = "'\\'"  val = 92
+-------------------------------------------------------------------------------------------------
+
+ ~/d/u/prac_compiler   *…  ./testlex test_lex.txt > tmp.txt                                                                                                                                                                                                            2024-11-11 23:36
+ ~/d/u/prac_compiler   *…  diff testlex_out.txt tmp.txt                                                                                                                                                                                                                2024-11-11 23:36
+ ~/d/u/prac_compiler   *…                      
+
+ (diffの結果が空)
+
+-------------------------------------------------
+ ./testlex factor.mc                                                                                                                                                                                                                         2024-11-11 23:36
+  1: type = KW_CHAR    token = "char"
+  1: type = ID         token = "separator"
+  1: type = SEMICOLON  token = ";"
+  4: type = KW_INT     token = "int"
+  4: type = ID         token = "factor"
+  4: type = LPAR       token = "("
+  4: type = KW_INT     token = "int"
+  4: type = ID         token = "n"
+  4: type = RPAR       token = ")"
+  5: type = LBRACE     token = "{"
+  6: type = KW_INT     token = "int"
+  6: type = ID         token = "d"
+  6: type = SEMICOLON  token = ";"
+  7: type = ID         token = "d"
+  7: type = EQ         token = "="
+  7: type = INT        token = "2"  val = 2
+  7: type = SEMICOLON  token = ";"
+  8: type = KW_WHILE   token = "while"
+  8: type = LPAR       token = "("
+  8: type = LPAR       token = "("
+  8: type = LPAR       token = "("
+  8: type = ID         token = "d"
+  8: type = STAR       token = "*"
+  8: type = ID         token = "d"
+  8: type = RPAR       token = ")"
+  8: type = LE         token = "<="
+  8: type = ID         token = "n"
+  8: type = RPAR       token = ")"
+  8: type = RPAR       token = ")"
+  8: type = LBRACE     token = "{"
+  9: type = KW_IF      token = "if"
+  9: type = LPAR       token = "("
+  9: type = LPAR       token = "("
+  9: type = LPAR       token = "("
+  9: type = ID         token = "n"
+  9: type = PERCENT    token = "%"
+  9: type = ID         token = "d"
+  9: type = RPAR       token = ")"
+  9: type = EQEQ       token = "=="
+  9: type = INT        token = "0"  val = 0
+  9: type = RPAR       token = ")"
+  9: type = RPAR       token = ")"
+  9: type = LBRACE     token = "{"
+ 10: type = ID         token = "putint"
+ 10: type = LPAR       token = "("
+ 10: type = ID         token = "d"
+ 10: type = RPAR       token = ")"
+ 10: type = SEMICOLON  token = ";"
+ 11: type = ID         token = "putchar"
+ 11: type = LPAR       token = "("
+ 11: type = ID         token = "separator"
+ 11: type = RPAR       token = ")"
+ 11: type = SEMICOLON  token = ";"
+ 12: type = ID         token = "n"
+ 12: type = EQ         token = "="
+ 12: type = LPAR       token = "("
+ 12: type = ID         token = "n"
+ 12: type = SLASH      token = "/"
+ 12: type = ID         token = "d"
+ 12: type = RPAR       token = ")"
+ 12: type = SEMICOLON  token = ";"
+ 13: type = RBRACE     token = "}"
+ 14: type = KW_ELSE    token = "else"
+ 14: type = LBRACE     token = "{"
+ 15: type = ID         token = "d"
+ 15: type = EQ         token = "="
+ 15: type = LPAR       token = "("
+ 15: type = ID         token = "d"
+ 15: type = PLUS       token = "+"
+ 15: type = INT        token = "1"  val = 1
+ 15: type = RPAR       token = ")"
+ 15: type = SEMICOLON  token = ";"
+ 16: type = RBRACE     token = "}"
+ 17: type = RBRACE     token = "}"
+ 18: type = ID         token = "putint"
+ 18: type = LPAR       token = "("
+ 18: type = ID         token = "n"
+ 18: type = RPAR       token = ")"
+ 18: type = SEMICOLON  token = ";"
+ 19: type = ID         token = "putchar"
+ 19: type = LPAR       token = "("
+ 19: type = CHAR       token = "'\n'"  val = 10
+ 19: type = RPAR       token = ")"
+ 19: type = SEMICOLON  token = ";"
+ 20: type = RBRACE     token = "}"
+ 23: type = KW_INT     token = "int"
+ 23: type = ID         token = "main"
+ 23: type = LPAR       token = "("
+ 23: type = RPAR       token = ")"
+ 24: type = LBRACE     token = "{"
+ 25: type = KW_INT     token = "int"
+ 25: type = ID         token = "n"
+ 25: type = SEMICOLON  token = ";"
+ 26: type = ID         token = "putchar"
+ 26: type = LPAR       token = "("
+ 26: type = CHAR       token = "'n'"  val = 110
+ 26: type = RPAR       token = ")"
+ 26: type = SEMICOLON  token = ";"
+ 27: type = ID         token = "putchar"
+ 27: type = LPAR       token = "("
+ 27: type = CHAR       token = "'='"  val = 61
+ 27: type = RPAR       token = ")"
+ 27: type = SEMICOLON  token = ";"
+ 28: type = ID         token = "n"
+ 28: type = EQ         token = "="
+ 28: type = ID         token = "getint"
+ 28: type = LPAR       token = "("
+ 28: type = RPAR       token = ")"
+ 28: type = SEMICOLON  token = ";"
+ 29: type = ID         token = "separator"
+ 29: type = EQ         token = "="
+ 29: type = CHAR       token = "'*'"  val = 42
+ 29: type = SEMICOLON  token = ";"
+ 30: type = ID         token = "factor"
+ 30: type = LPAR       token = "("
+ 30: type = ID         token = "n"
+ 30: type = RPAR       token = ")"
+ 30: type = SEMICOLON  token = ";"
+ 31: type = RBRACE     token = "}"
+
+##感想
+単純にパターンを追加するだけだったので簡単であった。
+

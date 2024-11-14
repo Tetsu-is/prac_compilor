@@ -643,8 +643,8 @@ int Function::run(map<string, Function *> &func, map<string, int> &gvar,
 
   auto i = args().begin();
   auto j = i_args.begin();
-  
-  for (;i != args().end() && j != i_args.end(); ++i, ++j)
+
+  for (; i != args().end() && j != i_args.end(); ++i, ++j)
   {
     lvar[(*i)->name()] = *j;
   }
@@ -692,12 +692,22 @@ void Program::print(ostream &os) const
 //------------------------------------------------------------------------
 //  Program::run() の 実装
 //------------------------------------------------------------------------
-int Program::run(map<string, Function *> &func, map<string, int> &gvar, list<int> &i_args) const
+int Program::run() const
 {
-  list<Variable *> gvar;
+  map<string, int> gvar;
+  map<string, Function *> func;
 
-  for(auto i = varlist()->begin(); i != varlist()->end(); i++)
+  for (auto it = varlist().begin(); it != varlist().end(); it++)
   {
-    gvar[(*i)->name()] =  
+    gvar[(*it)->name()] = 0;
   }
+
+  for (auto it = funclist().begin(); it != funclist().end(); it++)
+  {
+    func[(*it)->name()] = *it;
+  }
+
+  list<int> iargs;
+  int v = main()->run(func, gvar, iargs);
+  return v;
 }

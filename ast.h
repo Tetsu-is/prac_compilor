@@ -421,10 +421,10 @@ public:
       : varlist_(varlist), funclist_(funclist), main_(main) {}
   ~Program();
   const list<Variable *> &varlist() const { return varlist_; }
-  const list<Function *> &funclit() const { return funclist_; }
+  const list<Function *> &funclist() const { return funclist_; }
   const Function *main() const { return main_; }
   void print(ostream &os) const;
-  int run(map<string, Function *> &func, map<string, int> &gvar, list<int> &i_args) const;
+  int run() const;
 };
 
 #endif // ifndef INCLUDE_AST_H_

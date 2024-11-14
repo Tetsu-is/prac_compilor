@@ -13,3 +13,8 @@ format:
 # # check all files for compilation errors
 # check:
 # 	sh check.sh
+
+run-lex:
+	flex lex.ll
+	g++ -g -o testlex testlex.o lex.yy.c
+	./testlex test_lex.txt

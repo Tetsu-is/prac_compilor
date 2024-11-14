@@ -7,7 +7,8 @@
 #include <string>
 
 // factor 中の while 文中の if 文
-Statement *make_if() {
+Statement *make_if()
+{
   // n % d == 0
   Expression *v_1_n = new Exp_variable("n");
   Expression *v_1_d = new Exp_variable("d");
@@ -56,7 +57,8 @@ Statement *make_if() {
   return new St_if(cond, then, else_);
 }
 
-Statement *make_while() {
+Statement *make_while()
+{
   // d * d <= n
   Expression *v_1_1 = new Exp_variable("d");
   Expression *v_1_2 = new Exp_variable("d");
@@ -67,7 +69,8 @@ Statement *make_while() {
   return new St_while(cond, body);
 }
 
-Function *make_factor() {
+Function *make_factor()
+{
   // int n;
   Variable *v_n = new Variable(Type_INT, "n");
 
@@ -107,7 +110,8 @@ Function *make_factor() {
   return new Function(Type_INT, "factor", arg_list, lv_list, sl);
 }
 
-Function *make_main() {
+Function *make_main()
+{
   // int n;
   Variable *v_n = new Variable(Type_INT, "n");
 
@@ -153,7 +157,8 @@ Function *make_main() {
   return new Function(Type_INT, "main", arg_list, lv_list, sl);
 }
 
-int main(void) {
+int main(void)
+{
   // char separator;
   Variable *v = new Variable(Type_CHAR, "separator");
 
@@ -172,7 +177,8 @@ int main(void) {
   flist.push_back(f_factor);
 
   Program *prog = new Program(vlist, flist, f_main);
-  prog->print(std::cout);
+  // prog->print(std::cout);
+  prog->run();
 
   return 0;
 };
