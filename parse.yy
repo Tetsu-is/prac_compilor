@@ -32,6 +32,12 @@ void yyerror(const char*);
   Expression* expression;
   Exp_variable* exp_variable;
   std::list<Expression*>* explist;
+  Statement* statement;
+  std::list<Statement*> * stlist;
+  Variable* variable;
+  Type type;
+  Function* function;
+  std::list<Variable*>* vars;
 }
 
 // --------------------------------------------------------------------
@@ -67,6 +73,20 @@ void yyerror(const char*);
 %type <expression> expression
 %type <expression> exp_function
 %type <explist> explist
+%type <statement> statement
+%type <statement> st_assign
+%type <statement> st_if
+%type <statement> st_while
+%type <statement> st_return
+%type <statement> st_function
+%type <statement> st_list
+%type <stlist> stlist
+%type <variable> variable_dcl
+%type <type> type
+%type <function> function_dcl
+%type <vars> argument_dcllist
+%type <vars> variable_dcllist
+
 
 // --------------------------------------------------------------------
 // [Part-5] 開始記号の宣言
@@ -80,9 +100,121 @@ void yyerror(const char*);
 // --------------------------------------------------------------------
 
 program
-: expression
+: function_dcl
 {
   $1->print(std::cout); std::cout << std::endl;
+}
+
+function_dcl
+: type lex_ID lex_LPAREN argument_dcllist lex_RPAREN lex_LBRACE variable_dcllist st_list lex_RBRACE
+{
+  $$ = new Function($1, $2, *$4, *$7, $8);
+  delete $4;
+  delete $7;
+}
+
+argument_dcllist
+:
+{
+  $$ = new std::list<Variable*>;
+}
+| variable_dcl
+{
+ $$ = new std::list<Variable*>;
+ $$->push_back($1);
+}
+| argument_dcllist lex_COMMA variable_dcl
+{
+  $1->push_back($3);
+  $$ = $1;
+}
+
+
+variable_dcllist
+:
+{
+  $$ = new std::list<Variable*>;
+}
+| variable_dcllist variable_dcl lex_SEMICOLON
+{
+  $1->push_back($2);
+  $$ = $1;
+}
+
+variable_dcl
+: type lex_ID
+{
+  $$ = new Variable($1, $2);
+}
+
+type
+: lex_KW_INT
+{
+  $$ = Type_INT;
+}
+| lex_KW_CHAR
+{
+  $$ = Type_CHAR;
+}
+
+statement
+: st_assign {$$ = $1;}
+| lex_LBRACE st_list lex_RBRACE {$$ = $2;}
+| st_if {$$ = $1;}
+| st_while {$$ = $1;}
+| st_return {$$ = $1;}
+| st_function {$$ = $1;}
+
+st_assign
+: exp_variable lex_EQ expression lex_SEMICOLON
+{
+  $$ = new St_assign($1, $3);
+}
+
+st_list 
+: stlist
+{
+  $$ = new St_list(*$1);
+  delete $1;
+}
+
+stlist
+: 
+{
+  $$ = new std::list<Statement*>;
+}
+| stlist statement
+{
+  $1->push_back($2);
+  $$ = $1;
+}
+
+st_if 
+: lex_KW_IF lex_LPAREN expression lex_RPAREN statement
+{
+  $$ = new St_if($3, $5, NULL);
+}
+| lex_KW_IF lex_LPAREN expression lex_RPAREN statement lex_KW_ELSE statement 
+{
+  $$ = new St_if($3, $5, $7);
+}
+
+st_while 
+: lex_KW_WHILE lex_LPAREN expression lex_RPAREN statement
+{
+  $$ = new St_while($3, $5);
+}
+
+st_return 
+: lex_KW_RETURN expression lex_SEMICOLON
+{
+  $$ = new St_return($2);
+}
+
+st_function 
+: lex_ID lex_LPAREN explist lex_RPAREN lex_SEMICOLON
+{
+  $$ = new St_function($1, *$3);
 }
 
 expression4
@@ -205,7 +337,6 @@ expression
 {
   $$ = new Exp_operation2(Operator_NE, $1, $3);
 }
-
 
 %%
 // --------------------------------------------------------------------

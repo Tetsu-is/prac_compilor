@@ -1,0 +1,224 @@
+##コンパイラ実習 37022497 石本哲郎
+##日付 11/21
+
+##課題 12
+
+#課題内容
+文を処理する枠組み
+
+#結果
+make mci                                                                                                                                                  1415ms  2024-11-21 17:22
+bison --verbose --debug -d parse.yy -o parse.cpp
+parse.yy: warning: 7 useless nonterminals and 26 useless rules
+parse.yy:64.20-30: warning: useless nonterminal: expression4
+parse.yy:69.20-31: warning: useless nonterminal: exp_function
+parse.yy:70.17-23: warning: useless nonterminal: explist
+parse.yy:65.22-33: warning: useless nonterminal: exp_variable
+parse.yy:66.20-30: warning: useless nonterminal: expression3
+parse.yy:67.20-30: warning: useless nonterminal: expression2
+parse.yy:68.20-29: warning: useless nonterminal: expression
+parse.yy:112.3-115.1: warning: useless rule: expression4: lex_INT
+parse.yy:116.3-119.1: warning: useless rule: expression4: lex_CHAR
+parse.yy:120.3-123.1: warning: useless rule: expression4: exp_variable
+parse.yy:124.3-127.1: warning: useless rule: expression4: lex_LPAREN expression lex_RPAREN
+parse.yy:128.3-131.1: warning: useless rule: expression4: exp_function
+parse.yy:134.3-138.1: warning: useless rule: exp_function: lex_ID lex_LPAREN explist lex_RPAREN
+parse.yy:142.1-144.1: warning: useless rule: explist: /* empty */
+parse.yy:145.3-149.1: warning: useless rule: explist: expression
+parse.yy:150.3-154.1: warning: useless rule: explist: explist lex_COMMA expression
+parse.yy:157.3-160.1: warning: useless rule: exp_variable: lex_ID
+parse.yy:163.3-166.1: warning: useless rule: expression3: expression4
+parse.yy:167.3-170.1: warning: useless rule: expression3: expression3 lex_STAR expression4
+parse.yy:171.3-174.1: warning: useless rule: expression3: expression3 lex_SLASH expression4
+parse.yy:175.3-178.1: warning: useless rule: expression3: expression3 lex_PERCENT expression4
+parse.yy:181.3-184.1: warning: useless rule: expression2: expression3
+parse.yy:185.3-188.1: warning: useless rule: expression2: lex_PLUS expression3
+parse.yy:189.3-192.1: warning: useless rule: expression2: lex_MINUS expression3
+parse.yy:193.3-196.1: warning: useless rule: expression2: expression2 lex_PLUS expression3
+parse.yy:197.3-200.1: warning: useless rule: expression2: expression2 lex_MINUS expression3
+parse.yy:203.3-206.1: warning: useless rule: expression: expression2
+parse.yy:207.3-210.1: warning: useless rule: expression: expression lex_LT expression2
+parse.yy:211.3-214.1: warning: useless rule: expression: expression lex_GT expression2
+parse.yy:215.3-218.1: warning: useless rule: expression: expression lex_LE expression2
+parse.yy:219.3-222.1: warning: useless rule: expression: expression lex_GE expression2
+parse.yy:223.3-226.1: warning: useless rule: expression: expression lex_EQEQ expression2
+parse.yy:227.3-230.1: warning: useless rule: expression: expression lex_NE expression2
+parse.yy: conflicts: 1 reduce/reduce
+parse.yy:106.9-10: warning: rule never reduced because of conflicts: st_if: /* empty */
+parse.yy:107.12-13: warning: rule never reduced because of conflicts: st_while: /* empty */
+parse.yy:108.13-14: warning: rule never reduced because of conflicts: st_return: /* empty */
+parse.yy:109.15-16: warning: rule never reduced because of conflicts: st_function: /* empty */
+g++ -c -g lex.yy.c -o lex.yy.o
+clang++: warning: treating 'c' input as 'c++' when in C++ mode, this behavior is deprecated [-Wdeprecated]
+g++ -g -c parse.cpp
+g++ -g ast.o lex.yy.o parse.o -o mci
+
+#感想
+expressionと同様にstatementを追加するだけなので簡単だった。
+
+##課題 13
+
+#課題内容
+代入文
+
+#結果
+x = (((a * b) + c) / d);
+
+#感想
+代入式はシンプルなのでオペランドを追加していけばできた。
+
+##課題 14
+
+#課題内容
+複合文
+
+#結果
+x = (a + 2);
+y = (b * c);
+z = (x + y);
+
+#感想
+複合分は文をlistとして扱えば良い子がわかった。
+
+##課題 15
+
+#課題内容
+if文
+
+#結果
+if ((a > 0)) {
+  b = a;
+}
+else {
+  b = (-a);
+}
+--------------
+if ((a > 0)) {
+  b = a;
+}
+else {
+}
+
+
+#感想
+if文の構造が分かればSt_ifに式と文を入れていくだけなので簡単だった。
+
+##課題 16
+
+#課題内容
+while文
+
+#結果
+while ((i < n)) {
+  s = (s * 1);
+  i = (i + 1);
+}
+
+#感想
+if文と同様にSt_whileに式と文を入れるだけなので簡単だった。
+
+##課題 17
+
+#課題内容
+return文
+
+#結果
+return 9;
+
+#感想
+同様にするだけなので簡単だった。
+
+##課題 18
+
+#課題内容
+関数呼び出し文
+
+#結果
+gcd(25, b);
+
+#感想
+St_functionはExp_functionと同様にidentifierと
+引数リストの両方を渡す必要があることがわかった。
+
+##課題 19
+
+#課題内容
+変数宣言
+
+#結果
+int x
+
+#感想
+変数宣言は変数名と型を持つだけなので簡単だった。
+
+##課題 20
+
+#課題内容
+関数宣言(大枠)
+
+#結果
+int kansuu()
+{
+  a = 10;
+  return (x + y);
+}
+
+#感想
+stlistとst_listを区別するのが難しかった。
+
+##課題 21
+
+#課題内容
+関数宣言(引数宣言リストの完成)
+
+#結果
+int kansuu(int n)
+{
+}
+----------------
+int kansuu(int n, char c, int x)
+{
+}
+
+感想
+引数宣言リストが最適的になっているので理解するのに苦戦した。
+
+##課題 22
+
+#課題内容
+関数宣言(変数宣言リストの完成)
+
+#結果
+int kansuu(int n, char c, int x)
+{
+  int i;
+  int j;
+  int k;
+  return x;
+}
+---------------------
+int asum(int n)
+{
+  int s;
+  int i;
+  s = 0;
+  i = (-n);
+  while ((i <= n)) {
+    if ((i < 0)) {
+      s = (s - i);
+    }
+    else {
+      s = (s + i);
+    }
+    i = (i + 1);
+  }
+  return s;
+}
+
+#感想
+変数宣言リストは簡単だった。
+
+##課題 23
+
+#課題内容
+

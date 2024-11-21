@@ -458,12 +458,18 @@ void St_if::print(ostream &os, int indent) const
     os << "UNDEF";
   }
   os << tab(indent) << "}" << endl;
+  // if (else_part()) elseが空でも表示するように変更8.15
+  // {
+  //   os << tab(indent) << "else {" << endl;
+  //   else_part()->print(os, indent + 1);
+  //   os << tab(indent) << "}" << endl;
+  // }
+  os << tab(indent) << "else {" << endl;
   if (else_part())
   {
-    os << tab(indent) << "else {" << endl;
     else_part()->print(os, indent + 1);
-    os << tab(indent) << "}" << endl;
   }
+  os << tab(indent) << "}" << endl;
 }
 
 //------------------------------------------------------------------------
