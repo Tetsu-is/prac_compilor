@@ -114,9 +114,10 @@ typedef union YYSTYPE
   int val;
   Expression* expression;
   Exp_variable* exp_variable;
+  std::list<Expression*>* explist;
 }
 /* Line 1529 of yacc.c.  */
-#line 120 "parse.hpp"
+#line 121 "parse.hpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

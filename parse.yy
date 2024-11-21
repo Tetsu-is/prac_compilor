@@ -31,6 +31,7 @@ void yyerror(const char*);
   int val;
   Expression* expression;
   Exp_variable* exp_variable;
+  std::list<Expression*>* explist;
 }
 
 // --------------------------------------------------------------------
@@ -64,6 +65,8 @@ void yyerror(const char*);
 %type <expression> expression3
 %type <expression> expression2
 %type <expression> expression
+%type <expression> exp_function
+%type <explist> explist
 
 // --------------------------------------------------------------------
 // [Part-5] 開始記号の宣言
@@ -93,6 +96,37 @@ expression4
 }
 | exp_variable
 {
+  $$ = $1;
+}
+| lex_LPAREN expression lex_RPAREN
+{
+  $$ = $2;
+}
+| exp_function
+{
+  $$ = $1;
+}
+
+exp_function
+: lex_ID lex_LPAREN explist lex_RPAREN
+{
+  $$ = new Exp_function($1, *$3);
+  delete $3;
+}
+
+explist
+:
+{
+  $$ = new std::list<Expression*>;
+}
+| expression
+{
+  $$ = new std::list<Expression*>;
+  $$->push_back($1);
+}
+| explist lex_COMMA expression
+{
+  $1->push_back($3);
   $$ = $1;
 }
 
