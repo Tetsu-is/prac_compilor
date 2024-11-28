@@ -221,4 +221,60 @@ int asum(int n)
 ##課題 23
 
 #課題内容
+プログラム全体の構文解析
 
+#結果
+char separator;
+
+
+int factor(int n)
+{
+  int d;
+  d = 2;
+  while (((d * d) <= n)) {
+    if (((n % d) == 0)) {
+      putint(d);
+      putchar(separator);
+      n = (n / d);
+    }
+    else {
+      d = (d + 1);
+    }
+  }
+  putint(n);
+  putchar('\n');
+}
+
+int main()
+{
+  int n;
+  putchar('n');
+  putchar('=');
+  n = getint();
+  separator = '*';
+  factor(n);
+}
+
+# 感想
+やっとast全体を作れたので嬉しい。
+
+##課題 24
+
+#課題内容
+インタープリタの完成
+
+#結果
+n=360
+2*2*2*3*3*5
+-----------
+n=48
+m=36
+g=12
+n=9
+m=8
+g=1
+n=0
+m=0
+
+#感想
+インタープリタが完成して嬉しい。

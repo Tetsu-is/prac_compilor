@@ -16,6 +16,7 @@
 #include <string>
 
 class Function;
+class Variable;
 
 struct Return_t
 {
@@ -23,6 +24,12 @@ struct Return_t
   int return_val;       // return文の返り値
   Return_t() : val_is_returned(false), return_val(0) {}
   Return_t(bool r, int v) : val_is_returned(r), return_val(v) {}
+};
+
+struct Declaration_t
+{
+  std::list<Variable *> vars;
+  std::list<Function *> funclist;
 };
 
 using namespace std;

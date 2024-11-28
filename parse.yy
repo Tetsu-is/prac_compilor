@@ -20,6 +20,9 @@ extern std::FILE* yyin;
 int yylex(void);
 void yyerror(const char*);
 
+Program* ast;
+Program* build_program(Declaration_t* dd);
+
 %}
 
 // --------------------------------------------------------------------
@@ -38,6 +41,7 @@ void yyerror(const char*);
   Type type;
   Function* function;
   std::list<Variable*>* vars;
+  Declaration_t* declaration_data;
 }
 
 // --------------------------------------------------------------------
@@ -86,7 +90,7 @@ void yyerror(const char*);
 %type <function> function_dcl
 %type <vars> argument_dcllist
 %type <vars> variable_dcllist
-
+%type <declaration_data> dcllist
 
 // --------------------------------------------------------------------
 // [Part-5] 開始記号の宣言
@@ -100,9 +104,25 @@ void yyerror(const char*);
 // --------------------------------------------------------------------
 
 program
-: function_dcl
+: dcllist
 {
-  $1->print(std::cout); std::cout << std::endl;
+  ast = build_program($1);
+}
+
+dcllist
+:
+{
+  $$ = new Declaration_t;
+}
+| dcllist variable_dcl lex_SEMICOLON
+{
+  $1->vars.push_back($2);
+  $$ = $1;
+}
+| dcllist function_dcl
+{
+  $1->funclist.push_back($2);
+  $$ = $1;
 }
 
 function_dcl
@@ -171,7 +191,7 @@ st_assign
   $$ = new St_assign($1, $3);
 }
 
-st_list 
+st_list
 : stlist
 {
   $$ = new St_list(*$1);
@@ -179,7 +199,7 @@ st_list
 }
 
 stlist
-: 
+:
 {
   $$ = new std::list<Statement*>;
 }
@@ -189,7 +209,7 @@ stlist
   $$ = $1;
 }
 
-st_if 
+st_if
 : lex_KW_IF lex_LPAREN expression lex_RPAREN statement
 {
   $$ = new St_if($3, $5, NULL);
@@ -199,19 +219,19 @@ st_if
   $$ = new St_if($3, $5, $7);
 }
 
-st_while 
+st_while
 : lex_KW_WHILE lex_LPAREN expression lex_RPAREN statement
 {
   $$ = new St_while($3, $5);
 }
 
-st_return 
+st_return
 : lex_KW_RETURN expression lex_SEMICOLON
 {
   $$ = new St_return($2);
 }
 
-st_function 
+st_function
 : lex_ID lex_LPAREN explist lex_RPAREN lex_SEMICOLON
 {
   $$ = new St_function($1, *$3);
@@ -350,9 +370,25 @@ int main(int argc, char *argv[])
     linenum = 1;  // lex の行番号を 1 に初期設定
     yyin = fp;    // lex のファイルポインタをセット
     yyparse();    // 構文解析関数を呼び出す
+    ast->run();
   }
   else {
     printf("ファイル '%s' が開けません\n", argv[1]);
   }
 }
 
+Program* build_program(Declaration_t* dd)
+{
+  std::list<Function*> flist;
+  Function* mainf;
+
+  // ddのfunclistリスト中の関数のうち、"main"という名前の
+  // ものはmainfにセットし、それ以外はリストflistに入れる
+  std::list<Function*>::iterator f;
+  for (f = dd->funclist.begin(); f != dd->funclist.end(); f++) {
+    if ((*f)->name() == "main") { mainf = *f; }
+    else { flist.push_back(*f); }
+  }
+
+  return new Program(dd->vars, flist, mainf);
+}

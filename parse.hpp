@@ -108,7 +108,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 29 "parse.yy"
+#line 32 "parse.yy"
 {
   char* string;
   int val;
@@ -121,9 +121,10 @@ typedef union YYSTYPE
   Type type;
   Function* function;
   std::list<Variable*>* vars;
+  Declaration_t* declaration_data;
 }
 /* Line 1529 of yacc.c.  */
-#line 127 "parse.hpp"
+#line 128 "parse.hpp"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
