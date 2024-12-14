@@ -4,4 +4,7 @@ a.out.dSYM/*
 .idea/*
 out.txt
 a.out
-repo/*
+
+# Report related files
+utils/R_template.txt
+repo/R*.txt
